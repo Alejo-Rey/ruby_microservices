@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    env_file:
+      - .env.common
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  users-service:
+    build: ./microservices/users-service
+    command: rails server -b 0.0.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+    env_file:
+      - .env.common
+      - ./microservices/users-service/.env.${RAILS_ENV:-development}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./microservices/users-service:/app:cached
+
+  inventory-service:
+    build: ./microservices/inventory-service
+    command: rails server -b 0.0.0.0 -p 3001
+    ports:
+      - "3001:3001"
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+    env_file:
+      - .env.common
+      - ./microservices/inventory-service/.env.${RAILS_ENV:-development}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./microservices/inventory-service:/app:cached
+
+  orders-service:
+    build: ./microservices/orders-service
+    command: rails server -b 0.0.0.0 -p 3002
+    ports:
+      - "3002:3002"
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+    env_file:
+      - .env.common
+      - ./microservices/orders-service/.env.${RAILS_ENV:-development}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./microservices/orders-service:/app:cached
+
+volumes:
+  pgdata:

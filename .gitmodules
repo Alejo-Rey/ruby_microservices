@@ -1,0 +1,9 @@
+[submodule "microservices/inventory-service"]
+	path = microservices/inventory-service
+	url = git@github.com:Alejo-Rey/inventory-service.git
+[submodule "microservices/orders-service"]
+	path = microservices/orders-service
+	url = git@github.com:Alejo-Rey/orders-service.git
+[submodule "microservices/users-service"]
+	path = microservices/users-service
+	url = git@github.com:Alejo-Rey/users-service.git
