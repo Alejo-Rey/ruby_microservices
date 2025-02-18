@@ -7,3 +7,6 @@
 [submodule "microservices/users-service"]
 	path = microservices/users-service
 	url = git@github.com:Alejo-Rey/users-service.git
+[submodule "microservices/notifications-service"]
+	path = microservices/notifications-service
+	url = git@github.com:Alejo-Rey/notifications-service
