@@ -64,8 +64,22 @@ services:
     depends_on:
       - postgres
       - redis
+      - notifications-service
     volumes:
       - ./microservices/orders-service:/app:cached
+    stdin_open: true
+    tty: true
+
+  notifications-service:
+    build: ./microservices/notifications-service
+    command: ruby app.rb -o 0.0.0.0 -p 3003
+    ports:
+      - "3003:3003"
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+
+    volumes:
+      - ./microservices/notifications-service:/app:cached
     stdin_open: true
     tty: true
 
