@@ -30,6 +30,8 @@ services:
       - redis
     volumes:
       - ./microservices/users-service:/app:cached
+    stdin_open: true
+    tty: true
 
   inventory-service:
     build: ./microservices/inventory-service
@@ -46,6 +48,8 @@ services:
       - redis
     volumes:
       - ./microservices/inventory-service:/app:cached
+    stdin_open: true
+    tty: true
 
   orders-service:
     build: ./microservices/orders-service
@@ -62,6 +66,8 @@ services:
       - redis
     volumes:
       - ./microservices/orders-service:/app:cached
+    stdin_open: true
+    tty: true
 
 volumes:
   pgdata:
