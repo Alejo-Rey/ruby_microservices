@@ -15,6 +15,14 @@ services:
     ports:
       - "6379:6379"
 
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env.${RAILS_ENV:-development}
+
   users-service:
     build: ./microservices/users-service
     command: rails server -b 0.0.0.0
@@ -28,6 +36,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - rabbitmq
     volumes:
       - ./microservices/users-service:/app:cached
     stdin_open: true
@@ -46,6 +55,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - rabbitmq
     volumes:
       - ./microservices/inventory-service:/app:cached
     stdin_open: true
@@ -64,7 +74,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - notifications-service
+      - rabbitmq
     volumes:
       - ./microservices/orders-service:/app:cached
     stdin_open: true
@@ -77,7 +87,10 @@ services:
       - "3003:3003"
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     volumes:
       - ./microservices/notifications-service:/app:cached
     stdin_open: true
